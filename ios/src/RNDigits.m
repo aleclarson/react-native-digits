@@ -1,40 +1,46 @@
+
 #import <DigitsKit/DigitsKit.h>
+
+#import "RCTUtils.h"
+#import "RCTConvert.h"
 #import "RNDigits.h"
 
 @implementation RNDigits
 
 RCT_EXPORT_MODULE()
 
-RCT_EXPORT_METHOD(logout)
+RCT_EXPORT_METHOD(login:(NSDictionary*)options resolve:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject)
 {
-    [[Digits sharedInstance] logOut];
-}
+  Digits *digits = [Digits sharedInstance];
+  DGTAuthenticationConfiguration *config = [[DGTAuthenticationConfiguration alloc] initWithAccountFields:DGTAccountFieldsDefaultOptionMask];
 
-RCT_EXPORT_METHOD(view:(NSDictionary*)config callback:(RCTResponseSenderBlock)callback)
-{
-    Digits *digits = [Digits sharedInstance];
-    DGTAuthenticationConfiguration *configuration = [[DGTAuthenticationConfiguration alloc] initWithAccountFields:DGTAccountFieldsDefaultOptionMask];
-    configuration.appearance = [[DGTAppearance alloc] init];
-    
-    configuration.appearance.accentColor = [UIColor colorWithString:[config valueForKey:@"accentColor"]];
-    configuration.appearance.backgroundColor = [UIColor colorWithString:[config valueForKey:@"backgroundColor"]];
-    
-    [digits authenticateWithViewController:nil configuration:configuration completion:^(DGTSession *session, NSError *error) {
-        if (error) {
-            callback(@[error.localizedDescription, [NSNull null]]);
-        } else {
-            NSDictionary *auth = @{
-                                   @"consumerKey": [[digits authConfig] consumerKey],
-                                   @"consumerSecret": [[digits authConfig] consumerSecret],
-                                   @"authToken": session.authToken,
-                                   @"authTokenSecret": session.authTokenSecret,
-                                   @"userId": session.userID,
-                                   @"phoneNumber": session.phoneNumber
-                                   };
-            callback(@[[NSNull null], auth]);
-        }
+  config.appearance = [[DGTAppearance alloc] init];
+  config.appearance.accentColor = [RCTConvert UIColor:options[@"accentColor"]];
+  config.appearance.backgroundColor = [RCTConvert UIColor:options[@"backgroundColor"]];
+
+  [digits
+    authenticateWithViewController:nil
+    configuration:config
+    completion:^(DGTSession *session, NSError *error) {
+      if (error) {
+        reject(RCTErrorUnspecified, nil, RCTErrorWithMessage(error.localizedDescription));
+        return;
+      }
+
+      resolve(@{
+        @"userId": session.userID,
+        @"phoneNumber": session.phoneNumber,
+        @"authToken": session.authToken,
+        @"authTokenSecret": session.authTokenSecret,
+        @"consumerKey": digits.authConfig.consumerKey,
+        @"consumerSecret": digits.authConfig.consumerSecret,
+      });
     }];
 }
 
+RCT_EXPORT_METHOD(logout)
+{
+  [[Digits sharedInstance] logOut];
+}
 
 @end
