@@ -10,6 +10,7 @@
     "postinstall": "npm run build"
   },
   "dependencies": {
+    "Event": "aleclarson/Event#2.0.1",
     "Promise": "aleclarson/Promise#2.0.0",
     "Shape": "aleclarson/Shape#2.0.0",
     "Type": "aleclarson/Type#2.0.0"
