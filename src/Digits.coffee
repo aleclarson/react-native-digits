@@ -4,6 +4,7 @@
 processColor = require "processColor"
 Promise = require "Promise"
 Shape = require "Shape"
+Event = require "Event"
 Type = require "Type"
 
 UserData = Shape "Digits_UserData",
@@ -24,7 +25,7 @@ type.defineValues
 
   _authorizing: null
 
-type.defineEvents
+type.addMixin Event.Mixin,
 
   didLogin: {userData: UserData}
 
