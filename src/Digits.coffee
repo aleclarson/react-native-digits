@@ -26,9 +26,7 @@ type.defineValues
   _authorizing: null
 
 type.addMixin Event.Mixin,
-
   didLogin: {userData: UserData}
-
   didLogout: null
 
 type.defineGetters
@@ -49,12 +47,12 @@ type.defineMethods
       backgroundColor: processColor @backgroundColor
 
     return @_authorizing.then (json) =>
-      @__events.didLogin json
+      @emit "didLogin", json
       return json
 
   logout: ->
     RNDigits.logout()
-    @__events.didLogout()
+    @emit "didLogout"
     return
 
 module.exports = type.construct()
