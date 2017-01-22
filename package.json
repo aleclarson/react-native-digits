@@ -1,0 +1,11 @@
+{
+  "name": "react-native-digits",
+  "version": "1.0.0",
+  "main": "js/Digits",
+  "dependencies": {
+    "Event": "aleclarson/Event#3.1.2",
+    "Promise": "aleclarson/Promise#2.1.1",
+    "Shape": "aleclarson/Shape#2.0.1",
+    "Type": "aleclarson/Type#2.2.0"
+  }
+}
