@@ -1,10 +1,11 @@
 
+require("eve").installMixin()
+
 {RNDigits} = require "NativeModules"
 
 processColor = require "processColor"
 Promise = require "Promise"
 Shape = require "Shape"
-Event = require "Event"
 Type = require "Type"
 
 UserData = Shape "Digits_UserData",
@@ -25,7 +26,7 @@ type.defineValues
 
   _authorizing: null
 
-type.addMixin Event.Mixin,
+type.defineEvents
   didLogin: {userData: UserData}
   didLogout: null
 
